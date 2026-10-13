@@ -6,7 +6,7 @@ from ursina.string_utilities import multireplace
 
 
 class TextField(Entity):
-    def __init__(self, max_lines=64, line_height=1.1, character_limit=None, **kwargs):
+    def __init__(self, max_lines=64, line_height=1.1, character_limit=None, read_only=False, **kwargs):
         super().__init__(parent=camera.ui, x=-.5, y=.4, ignore_paused=True)
 
         self.font = Text.default_monospace_font
@@ -35,6 +35,7 @@ class TextField(Entity):
         self._prev_scroll = self.scroll
 
         self.active = True
+        self.read_only = read_only
         self.highlight_color = color.hsv(120,1,1,.1)
         self.text = ''
         self.delimiters = ' .,!?;:(){}[]<>\'\"@#$%^&*+=-\\|/`~'
@@ -354,6 +355,9 @@ class TextField(Entity):
 
 
     def input(self, key):
+        if self.read_only:    # by default it's false
+            return
+            
         # print('-------------', key)
         text, cursor, on_undo, add_text, erase = self.text, self.cursor, self.on_undo, self.add_text, self.erase
 
