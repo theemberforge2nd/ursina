@@ -10,7 +10,7 @@ class ContentTypes:
 
 @generate_properties_for_class()
 class InputField(Button):
-    def __init__(self, default_value='', label='', max_lines=1, character_limit=24, text='', text_color=None, active=False, **kwargs):
+    def __init__(self, default_value='', label='', max_lines=1, character_limit=24, text='', text_color=None, active=False, read_only=False **kwargs):
         if not 'scale' in kwargs and not 'scale_y' in kwargs:
             kwargs['scale'] = (kwargs.get('scale_x', .5), Text.size*2*max_lines)
 
@@ -29,7 +29,7 @@ class InputField(Button):
         self.on_submit = None   # function to be called when you press self.submit_on.
         self.on_value_changed = None
 
-        self.text_field = TextField(world_parent=self, x=-.45, y=.25, z=-.1, max_lines=max_lines, character_limit=character_limit, text=text, register_mouse_input=True, highlight_color=hsv(200,1,1,.5))
+        self.text_field = TextField(world_parent=self, x=-.45, y=.25, z=-.1, max_lines=max_lines, character_limit=character_limit, text=text, register_mouse_input=True, read_only=read_only, highlight_color=hsv(200,1,1,.5))
         destroy(self.text_field.bg)
         self.text_field.bg = self
 
@@ -91,7 +91,11 @@ class InputField(Button):
     #         self.text_field.text_input(key)
             # return True
 
-
+    def readonly_getter(self, value: bool) -> None:
+        self.text_field.read_only = value
+    
+    def readonly_setter(self, value):
+        return self.text_field.read_only
 
     def text_getter(self):
         return self.text_field.text
